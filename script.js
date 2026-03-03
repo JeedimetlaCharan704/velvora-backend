@@ -113,7 +113,7 @@ function renderNewArrivals() {
     const grid = document.getElementById('newArrivalsGrid');
     if (!grid) return;
     console.log('All products:', products);
-    const newProducts = products.filter(p => p.tag === 'new').slice(0, 4);
+    const newProducts = products.filter(p => p.tag && p.tag.toLowerCase() === 'new').slice(0, 4);
     console.log('New products:', newProducts);
     if (newProducts.length === 0) {
         grid.innerHTML = '<p class="no-products">No new arrivals yet</p>';
