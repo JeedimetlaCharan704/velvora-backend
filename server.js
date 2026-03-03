@@ -8,6 +8,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/health', (req, res) => {
+  const mongoState = mongoose.connection.readyState;
+  const mongoStates = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting'
+  };
+  res.json({ 
+    status: 'ok', 
+    mongoDB: mongoStates[mongoState],
+    mongoUriSet: !!process.env.MONGODB_URI
+  });
+});
+
 const JWT_SECRET = 'velvora_admin_secret_key_2024';
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/velvora', {
