@@ -108,8 +108,13 @@ function createProductCard(product) {
 
 function renderNewArrivals() {
     const grid = document.getElementById('newArrivalsGrid');
+    if (!grid) return;
     const newProducts = products.filter(p => p.tag === 'new').slice(0, 4);
-    grid.innerHTML = newProducts.map(product => createProductCard(product)).join('');
+    if (newProducts.length === 0) {
+        grid.innerHTML = '<p class="no-products">No new arrivals yet</p>';
+    } else {
+        grid.innerHTML = newProducts.map(product => createProductCard(product)).join('');
+    }
 }
 
 function addToCart(productId, quantity = 1) {
