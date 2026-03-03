@@ -10,9 +10,12 @@ app.use(express.json());
 
 const JWT_SECRET = 'velvora_admin_secret_key_2024';
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/velvora')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/velvora', {
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+})
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+  .catch(err => console.log('MongoDB connection error:', err));
 
 const productSchema = new mongoose.Schema({
   name: String,
