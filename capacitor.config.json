@@ -1,0 +1,12 @@
+{
+  "appId": "com.velvora.admin",
+  "appName": "Velvora Admin",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http"
+  },
+  "android": {
+    "allowMixedContent": true,
+    "webContentsDebuggingEnabled": true
+  }
+}

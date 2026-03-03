@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Velvora Luxury</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"/>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8a96a">
+</head>
+
+<body>
+
+<aside class="admin-sidebar">
+    <div class="admin-logo">
+        <a href="index.html">VELVORA</a>
+        <span>Admin Panel</span>
+    </div>
+
+    <ul class="admin-menu">
+        <li class="active" onclick="showAdminSection('dashboard')">
+            <i class="fas fa-th-large"></i> Dashboard
+        </li>
+        <li onclick="showAdminSection('orders')">
+            <i class="fas fa-shopping-bag"></i> Orders
+        </li>
+        <li onclick="showAdminSection('products')">
+            <i class="fas fa-box"></i> Products
+        </li>
+        <li onclick="showAdminSection('customers')">
+            <i class="fas fa-users"></i> Customers
+        </li>
+        <li onclick="showAdminSection('analytics')">
+            <i class="fas fa-chart-line"></i> <span>Analytics</span>
+        </li>
+        <li onclick="logoutAdmin()">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </li>
+    </ul>
+</aside>
+
+<main class="admin-main">
+    <header class="admin-header">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h2 id="pageTitle">Dashboard</h2>
+        <div class="admin-user">
+            <span>Welcome, <strong>Admin</strong></span>
+            <div class="admin-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Section -->
+    <div class="admin-section active" id="dashboard">
+        <div class="stats-grid">
+            <div class="stat-card admin-stat">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalOrders">0</span>
+                    <span class="stat-label">Total Orders</span>
+                </div>
+                <div class="stat-trend up">
+                    <i class="fas fa-arrow-up"></i> 12%
+                </div>
+            </div>
+            <div class="stat-card admin-stat">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalRevenue">$0</span>
+                    <span class="stat-label">Total Revenue</span>
+                </div>
+                <div class="stat-trend up">
+                    <i class="fas fa-arrow-up"></i> 8%
+                </div>
+            </div>
+            <div class="stat-card admin-stat">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalCustomers">0</span>
+                    <span class="stat-label">Customers</span>
+                </div>
+                <div class="stat-trend up">
+                    <i class="fas fa-arrow-up"></i> 15%
+                </div>
+            </div>
+            <div class="stat-card admin-stat">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalProducts">0</span>
+                    <span class="stat-label">Products</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-charts">
+            <div class="chart-card">
+                <h3>Recent Orders</h3>
+                <div class="recent-orders-table" id="recentOrdersTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Section -->
+    <div class="admin-section" id="orders">
+        <div class="section-header">
+            <h3>All Orders</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Processing</button>
+                <button class="filter-btn">Shipped</button>
+                <button class="filter-btn">Delivered</button>
+            </div>
+        </div>
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="allOrdersTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="admin-section" id="products">
+        <div class="section-header">
+            <h3>Products Management</h3>
+            <button class="add-btn" onclick="showAddProduct()">
+                <i class="fas fa-plus"></i> Add Product
+            </button>
+        </div>
+        <div class="products-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Customers Section -->
+    <div class="admin-section" id="customers">
+        <div class="section-header">
+            <h3>Customers</h3>
+        </div>
+        <div class="customers-grid" id="customersGrid"></div>
+    </div>
+
+    <!-- Analytics Section -->
+    <div class="admin-section" id="analytics">
+        <!-- Stats Counter -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalRevenue">$0</span>
+                    <span class="stat-label">Total Revenue</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="avgOrderValue">$0</span>
+                    <span class="stat-label">Avg Order Value</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts -->
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <h3>Revenue Overview</h3>
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div class="analytics-card">
+                <h3>Orders by Status</h3>
+                <canvas id="ordersStatusChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <h3>Top Products</h3>
+                <div class="top-products-list" id="topProductsList"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Image Upload Modal with Cropper -->
+<div class="modal" id="imageUploadModal">
+    <div class="modal-content image-modal">
+        <span class="modal-close" onclick="closeImageModal()">&times;</span>
+        <h3>Upload Product Image</h3>
+        <div class="upload-area" id="dropArea">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Drag & Drop or Click to Upload</p>
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+        <div class="cropper-container" id="cropperContainer" style="display:none;">
+            <img id="cropperImage" src="">
+        </div>
+        <div class="cropper-actions">
+            <button class="crop-btn" id="cropBtn" onclick="cropImage()" style="display:none;">
+                <i class="fas fa-crop-alt"></i> Crop Image
+            </button>
+            <button class="cancel-btn" onclick="closeImageModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Order Detail Modal -->
+<div class="modal" id="orderModal">
+    <div class="modal-content admin-modal">
+        <span class="modal-close" onclick="closeOrderModal()">&times;</span>
+        <h3>Order Details</h3>
+        <div id="orderDetails"></div>
+    </div>
+</div>
+
+<!-- Mobile Bottom Navigation -->
+<div class="mobile-nav">
+    <button onclick="showMobileNav('dashboard', event)">
+        <i class="fas fa-th-large"></i><span>Home</span>
+    </button>
+    <button onclick="showMobileNav('products', event)">
+        <i class="fas fa-box"></i><span>Products</span>
+    </button>
+    <button onclick="showMobileNav('orders', event)">
+        <i class="fas fa-shopping-bag"></i><span>Orders</span>
+    </button>
+    <button onclick="showMobileNav('analytics', event)">
+        <i class="fas fa-chart-line"></i><span>Stats</span>
+    </button>
+    <button onclick="logoutAdmin()">
+        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+    </button>
+</div>
+
+<!-- Floating Add Button -->
+<button class="fab" onclick="showAddProduct()">
+    <i class="fas fa-plus"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
+<script src="admin.js"></script>
+
+</body>
+</html>

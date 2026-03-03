@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Velvora Luxury</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
+</head>
+
+<body class="auth-page">
+
+<div class="auth-container">
+    <div class="auth-box">
+        <div class="auth-header">
+            <a href="index.html" class="logo">VELVORA</a>
+            <p class="auth-subtitle">Welcome back to Velvora</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+            <button class="auth-tab" onclick="switchTab('register')">Create Account</button>
+        </div>
+
+        <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="Enter your email" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Enter your password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="form-options">
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+            <button type="submit" class="auth-btn">Sign In</button>
+        </form>
+
+        <form id="registerForm" class="auth-form" style="display:none" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" placeholder="Enter your name" required>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="Enter your email" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Create a password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" placeholder="Confirm your password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <button type="submit" class="auth-btn">Create Account</button>
+        </form>
+
+        <div class="auth-divider">
+            <span>or continue with</span>
+        </div>
+
+        <div class="social-auth">
+            <button class="social-btn"><i class="fab fa-google"></i> Google</button>
+            <button class="social-btn"><i class="fab fa-facebook-f"></i> Facebook</button>
+        </div>
+
+        <p class="auth-footer">
+            By continuing, you agree to Velvora's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        </p>
+    </div>
+
+    <div class="auth-info">
+        <div class="auth-info-content">
+            <h2>Experience Luxury</h2>
+            <p>Join Velvora and discover premium fashion curated for the modern connoisseur.</p>
+            <ul class="auth-benefits">
+                <li><i class="fas fa-check"></i> Exclusive early access to new collections</li>
+                <li><i class="fas fa-check"></i> Personalized shopping experience</li>
+                <li><i class="fas fa-check"></i> Order tracking and history</li>
+                <li><i class="fas fa-check"></i> Saved addresses and payment methods</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:5000/api';
+
+    function switchTab(tab) {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.auth-form').forEach(f => f.style.display = 'none');
+        
+        if (tab === 'login') {
+            document.querySelector('.auth-tab:first-child').classList.add('active');
+            document.getElementById('loginForm').style.display = 'block';
+        } else {
+            document.querySelector('.auth-tab:last-child').classList.add('active');
+            document.getElementById('registerForm').style.display = 'block';
+        }
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const email = e.target.querySelector('input[type="email"]').value;
+        const password = e.target.querySelector('input[type="password"]').value;
+        
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                showNotification(data.message || 'Login failed');
+                return;
+            }
+            
+            localStorage.setItem('velvoraUser', JSON.stringify(data.user));
+            localStorage.setItem('velvoraToken', data.token);
+            
+            if (data.user.role === 'admin') {
+                localStorage.setItem('velvoraAdminUser', JSON.stringify(data.user));
+                localStorage.setItem('velvoraAdminToken', data.token);
+                window.location.href = 'admin.html';
+            } else {
+                showNotification('Welcome back! Login successful.');
+                setTimeout(() => window.location.href = 'index.html', 1000);
+            }
+        } catch (error) {
+            showNotification('Connection error. Please try again.');
+        }
+    }
+
+    async function handleRegister(e) {
+        e.preventDefault();
+        const name = e.target.querySelector('input[type="text"]').value;
+        const email = e.target.querySelector('input[type="email"]').value;
+        const password = e.target.querySelector('input[type="password"]').value;
+        
+        try {
+            const response = await fetch(`${API_URL}/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                showNotification(data.message || 'Registration failed');
+                return;
+            }
+            
+            localStorage.setItem('velvoraUser', JSON.stringify(data.user));
+            localStorage.setItem('velvoraToken', data.token);
+            showNotification('Account created successfully!');
+            setTimeout(() => window.location.href = 'index.html', 1000);
+        } catch (error) {
+            showNotification('Connection error. Please try again.');
+        }
+    }
+
+    function showNotification(message) {
+        const notif = document.createElement('div');
+        notif.className = 'notification show';
+        notif.textContent = message;
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 3000);
+    }
+</script>
+
+</body>
+</html>
