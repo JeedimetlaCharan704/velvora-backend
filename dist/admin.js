@@ -1,5 +1,5 @@
 // API Configuration
-const API_URL = localStorage.getItem('apiUrl') || 'http://localhost:5000/api';
+const API_URL = 'https://velvora-backend.onrender.com/api';
 let authToken = localStorage.getItem('velvoraAdminToken');
 let allProducts = [];
 let allOrders = [];
