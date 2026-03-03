@@ -18,6 +18,7 @@ app.get('/api/health', (req, res) => {
   };
   res.json({ 
     status: 'ok', 
+    message: 'Velvora API running',
     mongoDB: mongoStates[mongoState],
     mongoUriSet: !!process.env.MONGODB_URI
   });
