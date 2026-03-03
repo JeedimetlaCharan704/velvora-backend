@@ -235,7 +235,7 @@ function renderProducts() {
     
     // Desktop table
     if (tbody) {
-        tbody.innerHTML = allProducts.map(p => `
+        tbody.innerHTML = allProducts.map((p, index) => `
             <tr>
                 <td><img src="${p.image}" alt="${p.name}" class="product-thumb" onerror="this.src='https://via.placeholder.com/50'"></td>
                 <td>${p.name}</td>
@@ -243,11 +243,19 @@ function renderProducts() {
                 <td>$${p.price.toFixed(2)}</td>
                 <td><span class="stock-badge ${p.stock < 20 ? 'low' : ''}">${p.stock}</span></td>
                 <td>
-                    <button class="action-btn" onclick="editProduct('${p._id}')"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete" onclick="deleteProduct('${p._id}')"><i class="fas fa-trash"></i></button>
+                    <button class="action-btn" data-index="${index}"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete" data-index="${index}"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         `).join('');
+        
+        // Add click handlers
+        tbody.querySelectorAll('.action-btn:not(.delete)').forEach(btn => {
+            btn.onclick = () => editProduct(parseInt(btn.dataset.index));
+        });
+        tbody.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.onclick = () => deleteProduct(parseInt(btn.dataset.index));
+        });
     }
     
     // Mobile cards
@@ -259,7 +267,7 @@ function renderProducts() {
             container.appendChild(mobileCards);
         }
         
-        mobileCards.innerHTML = allProducts.map(p => `
+        mobileCards.innerHTML = allProducts.map((p, index) => `
             <div class="product-card-admin">
                 <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/70'">
                 <div>
@@ -267,12 +275,20 @@ function renderProducts() {
                     <p>$${p.price.toFixed(2)}</p>
                     <span class="stock-badge ${p.stock < 20 ? 'low' : ''}">${p.stock} in stock</span>
                     <div class="action-buttons">
-                        <button class="action-btn" onclick="editProduct('${p._id}')"><i class="fas fa-edit"></i> Edit</button>
-                        <button class="action-btn delete" onclick="deleteProduct('${p._id}')"><i class="fas fa-trash"></i></button>
+                        <button class="action-btn" data-index="${index}"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete" data-index="${index}"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             </div>
         `).join('');
+        
+        // Add click handlers for mobile
+        mobileCards.querySelectorAll('.action-btn:not(.delete)').forEach(btn => {
+            btn.onclick = () => editProduct(parseInt(btn.dataset.index));
+        });
+        mobileCards.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.onclick = () => deleteProduct(parseInt(btn.dataset.index));
+        });
     }
 }
 
@@ -356,12 +372,14 @@ async function addProduct(event) {
 }
 
 // Edit Product
-async function editProduct(productId) {
-    const product = allProducts.find(p => String(p._id) === String(productId));
+async function editProduct(index) {
+    const product = allProducts[index];
     if (!product) {
         alert('Product not found');
         return;
     }
+    
+    const productId = product._id;
 
     const formHtml = `
         <button type="button" class="modal-close" onclick="closeProductForm()" style="position:absolute;top:15px;right:20px;font-size:24px;cursor:pointer;background:none;border:none;">&times;</button>
@@ -435,7 +453,10 @@ async function updateProduct(event, productId) {
 }
 
 // Delete Product
-async function deleteProduct(productId) {
+async function deleteProduct(index) {
+    const product = allProducts[index];
+    const productId = product._id;
+    
     if (!confirm('Are you sure you want to delete this product?')) return;
     
     try {
