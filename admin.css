@@ -1584,7 +1584,7 @@
     
     /* FAB */
     .fab {
-        display: flex;
+        display: flex !important;
         position: fixed;
         bottom: 85px;
         right: 20px;
@@ -1592,14 +1592,14 @@
         height: 56px;
         border-radius: 50%;
         background: linear-gradient(135deg, #c8a96a, #e0c992);
-        color: white;
+        color: #1a1a1a;
         font-size: 24px;
         border: none;
         box-shadow: 0 8px 25px rgba(200, 169, 106, 0.4);
         cursor: pointer;
         align-items: center;
         justify-content: center;
-        z-index: 999;
+        z-index: 9999;
         transition: all 0.3s ease;
     }
     
@@ -1743,6 +1743,10 @@
 @media (max-width: 768px) {
     .mobile-cards {
         display: flex;
+    }
+    
+    .fab {
+        display: flex !important;
     }
 }
 
