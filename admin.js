@@ -357,8 +357,16 @@ async function addProduct(event) {
 
 // Edit Product
 async function editProduct(productId) {
+    console.log('Editing product:', productId);
+    console.log('Available products:', allProducts.map(p => p._id));
+    
     const product = allProducts.find(p => String(p._id) === String(productId));
-    if (!product) return;
+    if (!product) {
+        console.error('Product not found:', productId);
+        alert('Product not found');
+        return;
+    }
+    console.log('Found product:', product.name);
 
     const formHtml = `
         <div class="product-form-modal">
@@ -394,7 +402,7 @@ async function editProduct(productId) {
     
     const modal = document.createElement('div');
     modal.className = 'modal active';
-    modal.innerHTML = `<div class="modal-content">${formHtml}</div>`;
+    modal.innerHTML = `<div class="modal-content admin-modal">${formHtml}</div>`;
     modal.onclick = (e) => { if (e.target === modal) closeProductForm(); };
     document.body.appendChild(modal);
 }
