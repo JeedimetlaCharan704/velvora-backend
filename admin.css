@@ -1172,6 +1172,20 @@
         padding: 10px;
     }
     
+    .product-form-modal form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .product-form-modal input,
+    .product-form-modal select,
+    .product-form-modal textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
     .product-form-modal h2 {
         font-size: 18px;
     }
