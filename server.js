@@ -20,18 +20,31 @@ app.get('/api/health', (req, res) => {
     status: 'ok', 
     message: 'Velvora API running',
     mongoDB: mongoStates[mongoState],
-    mongoUriSet: !!process.env.MONGODB_URI
+    mongoUriSet: !!process.env.MONGODB_URI,
+    mongoUri: process.env.MONGODB_URI ? process.env.MONGODB_URI.replace(/\/\/.*:.*@/, '//***:***@') : null
   });
 });
 
+app.get('/api/test-mongo', async (req, res) => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 10000 });
+    res.json({ status: 'connected', message: 'MongoDB working!' });
+  } catch (err) {
+    res.json({ status: 'error', message: err.message });
+  }
+});
+
 const JWT_SECRET = 'velvora_admin_secret_key_2024';
+
+console.log('Connecting to MongoDB...');
+console.log('MongoDB URI set:', !!process.env.MONGODB_URI);
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/velvora', {
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
 })
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB connection error:', err));
+  .catch(err => console.log('MongoDB Error:', err.message));
 
 const productSchema = new mongoose.Schema({
   name: String,
