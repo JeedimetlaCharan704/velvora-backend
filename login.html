@@ -121,13 +121,24 @@
         const password = e.target.querySelector('input[type="password"]').value;
         
         try {
-            const response = await fetch(`${API_URL}/auth/login`, {
+            // Try admin login first
+            let response = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
             
-            const data = await response.json();
+            let data = await response.json();
+            
+            // If not admin, try user login
+            if (!response.ok) {
+                response = await fetch(`${API_URL}/auth/user/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                data = await response.json();
+            }
             
             if (!response.ok) {
                 showNotification(data.message || 'Login failed');

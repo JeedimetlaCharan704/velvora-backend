@@ -94,11 +94,31 @@
 </div>
 
 <script>
+    const API_URL = 'https://velvora-backend.onrender.com/api';
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('orderId') || 'VEL-' + Date.now();
     
-    const orders = JSON.parse(localStorage.getItem('velvoraOrders')) || [];
-    const order = orders.find(o => o.id === orderId);
+    // Try to find order in localStorage first
+    let orders = JSON.parse(localStorage.getItem('velvoraOrders')) || [];
+    let order = orders.find(o => (o.orderId || o.id) === orderId);
+
+    // If not in localStorage, try to fetch from API
+    if (!order) {
+        const token = localStorage.getItem('velvoraToken');
+        if (token) {
+            try {
+                const response = await fetch(`${API_URL}/users/orders`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const apiOrders = await response.json();
+                    order = apiOrders.find(o => o.orderId === orderId);
+                }
+            } catch (e) {
+                console.log('Could not fetch order from API');
+            }
+        }
+    }
 
     document.getElementById('orderId').textContent = orderId;
     document.getElementById('orderDate').textContent = new Date().toLocaleDateString('en-US', {
@@ -113,24 +133,26 @@
 
     if (order) {
         const itemsContainer = document.getElementById('successItems');
-        itemsContainer.innerHTML = order.items.map(item => `
+        const items = order.items || [];
+        itemsContainer.innerHTML = items.map(item => `
             <div class="success-item">
                 <img src="${item.image}" alt="${item.name}">
                 <div>
                     <h4>${item.name}</h4>
                     <p>Qty: ${item.quantity}</p>
                 </div>
-                <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                <span>$${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
             </div>
         `).join('');
 
-        document.getElementById('successTotal').textContent = `$${order.total.toFixed(2)}`;
+        document.getElementById('successTotal').textContent = `$${(order.total || 0).toFixed(2)}`;
 
-        if (order.shippingAddress) {
-            document.getElementById('shippingName').textContent = order.shippingAddress.name;
-            document.getElementById('shippingAddress').textContent = order.shippingAddress.address;
+        const shippingAddr = order.shippingAddress;
+        if (shippingAddr) {
+            document.getElementById('shippingName').textContent = shippingAddr.name || 'Customer';
+            document.getElementById('shippingAddress').textContent = shippingAddr.address || '';
             document.getElementById('shippingCity').textContent = 
-                `${order.shippingAddress.city}, ${order.shippingAddress.postal}, ${order.shippingAddress.country}`;
+                `${shippingAddr.city || ''}, ${shippingAddr.postalCode || ''}, ${shippingAddr.country || ''}`;
         }
     }
 </script>

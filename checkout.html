@@ -269,6 +269,19 @@
             }
 
             localStorage.removeItem('velvoraCart');
+            
+            // Save order to localStorage for profile/order pages
+            const existingOrders = JSON.parse(localStorage.getItem('velvoraOrders')) || [];
+            existingOrders.unshift({
+                id: data.order.orderId,
+                items: orderData.items,
+                total: total,
+                status: 'Pending',
+                date: new Date().toLocaleDateString(),
+                shippingAddress: orderData.shippingAddress
+            });
+            localStorage.setItem('velvoraOrders', JSON.stringify(existingOrders));
+            
             window.location.href = 'order-success.html?orderId=' + data.order.orderId;
         } catch (error) {
             alert('Connection error. Please try again.');
