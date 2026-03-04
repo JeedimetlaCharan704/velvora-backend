@@ -1,4 +1,4 @@
-const API_URL = localStorage.getItem('apiUrl') || 'http://localhost:5000/api';
+const API_URL = 'https://velvora-backend.onrender.com/api';
 let products = [];
 let cart = JSON.parse(localStorage.getItem('velvoraCart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('velvoraWishlist')) || [];

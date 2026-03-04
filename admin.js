@@ -1,7 +1,6 @@
 // API Configuration
 // Change this to your production URL when deploying
-const API_URL = localStorage.getItem('apiUrl') || 'http://localhost:5000/api';
-// For production, set: localStorage.setItem('apiUrl', 'https://your-render-url.onrender.com/api');
+const API_URL = 'https://velvora-backend.onrender.com/api';
 let authToken = localStorage.getItem('velvoraAdminToken');
 let allProducts = getStoredProducts();
 let allOrders = [];
