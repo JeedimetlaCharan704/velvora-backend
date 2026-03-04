@@ -120,37 +120,15 @@ const sampleProducts = [
     }
 ];
 
-async function loadProducts() {
+function loadProducts() {
     products = sampleProducts;
-    console.log('Initial products:', products);
-    
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-        
-        const response = await fetch(`${API_URL}/products`, { signal: controller.signal });
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) throw new Error('API not available');
-        const data = await response.json();
-        console.log('API Response:', data);
-        
-        const apiProducts = data.products || data;
-        if (Array.isArray(apiProducts) && apiProducts.length > 0) {
-            products = apiProducts;
-        }
-    } catch (error) {
-        console.error('Failed to load products:', error.message);
-    }
-    
-    console.log('Final products:', products.length, 'items');
-    console.log('New arrivals:', products.filter(p => p.tag === 'new').length);
-}
-
-async function init() {
-    await loadProducts();
+    console.log('Products loaded:', products.length);
     renderProducts();
     renderNewArrivals();
+}
+
+function init() {
+    loadProducts();
     updateCartCount();
     updateWishlistCount();
     initSlider();
