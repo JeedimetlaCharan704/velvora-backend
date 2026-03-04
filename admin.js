@@ -899,11 +899,18 @@ function closeImageModal() {
 }
 
 // Initialize Charts
+let revenueChart = null;
+let ordersChart = null;
+
 function initCharts() {
+    // Destroy existing charts
+    if (revenueChart) { revenueChart.destroy(); revenueChart = null; }
+    if (ordersChart) { ordersChart.destroy(); ordersChart = null; }
+    
     // Revenue Chart
     const revenueCtx = document.getElementById('revenueChart');
     if (revenueCtx) {
-        new Chart(revenueCtx, {
+        revenueChart = new Chart(revenueCtx, {
             type: 'line',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
