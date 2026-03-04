@@ -56,16 +56,16 @@
         </div>
         
         <ul class="profile-menu">
-            <li class="active" onclick="showSection('dashboard', event)">
+            <li class="active" data-section="dashboard">
                 <i class="fas fa-th-large"></i> Dashboard
             </li>
-            <li onclick="showSection('orders', event)">
+            <li data-section="orders">
                 <i class="fas fa-box"></i> My Orders
             </li>
-            <li onclick="showSection('addresses', event)">
+            <li data-section="addresses">
                 <i class="fas fa-map-marker-alt"></i> Addresses
             </li>
-            <li onclick="showSection('account', event)">
+            <li data-section="account">
                 <i class="fas fa-cog"></i> Account Settings
             </li>
             <li class="logout" onclick="logout()">
@@ -251,23 +251,6 @@
         renderAddresses();
     }
 
-    function showSection(section, event) {
-        document.querySelectorAll('.profile-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.profile-menu li').forEach(l => l.classList.remove('active'));
-        
-        document.getElementById(section).classList.add('active');
-        if (event && event.target) {
-            event.target.closest('li')?.classList.add('active');
-        } else {
-            // Fallback: find the li that contains the onclick
-            document.querySelectorAll('.profile-menu li').forEach(li => {
-                if (li.getAttribute('onclick')?.includes(section)) {
-                    li.classList.add('active');
-                }
-            });
-        }
-    }
-
     function renderOrders() {
         const ordersList = document.getElementById('ordersList');
         const recentList = document.getElementById('recentOrdersList');
@@ -400,6 +383,21 @@
         localStorage.removeItem('velvoraAdminUser');
         localStorage.removeItem('velvoraAdminToken');
         window.location.href = 'index.html';
+    }
+
+    // Click handlers for menu items
+    document.querySelectorAll('.profile-menu li[data-section]').forEach(li => {
+        li.addEventListener('click', function() {
+            showSection(this.dataset.section);
+        });
+    });
+
+    function showSection(section) {
+        document.querySelectorAll('.profile-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.profile-menu li').forEach(l => l.classList.remove('active'));
+        
+        document.getElementById(section).classList.add('active');
+        document.querySelector(`.profile-menu li[data-section="${section}"]`)?.classList.add('active');
     }
 
     // Initialize on load
