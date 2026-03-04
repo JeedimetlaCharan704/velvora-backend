@@ -55,20 +55,20 @@
             <p id="userEmail">user@email.com</p>
         </div>
         
-        <ul class="profile-menu" style="position: relative; z-index: 100;">
-            <li class="active" onclick="event.stopPropagation(); showSection('dashboard')">
+        <ul class="profile-menu" id="profileMenu">
+            <li class="active" data-section="dashboard">
                 <i class="fas fa-th-large"></i> Dashboard
             </li>
-            <li onclick="event.stopPropagation(); showSection('orders')">
+            <li data-section="orders">
                 <i class="fas fa-box"></i> My Orders
             </li>
-            <li onclick="event.stopPropagation(); showSection('addresses')">
+            <li data-section="addresses">
                 <i class="fas fa-map-marker-alt"></i> Addresses
             </li>
-            <li onclick="event.stopPropagation(); showSection('account')">
+            <li data-section="account">
                 <i class="fas fa-cog"></i> Account Settings
             </li>
-            <li class="logout" onclick="event.stopPropagation(); logout()">
+            <li class="logout" data-section="logout">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </li>
         </ul>
@@ -387,13 +387,27 @@
     }
 
     function showSection(section) {
-        console.log('Section:', section);
         if (!section) return;
         document.querySelectorAll('.profile-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.profile-menu li').forEach(l => l.classList.remove('active'));
         
         document.getElementById(section).classList.add('active');
     }
+
+    // Add click listeners
+    document.querySelectorAll('.profile-menu li').forEach(function(li) {
+        li.style.cursor = 'pointer';
+        li.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var section = li.getAttribute('data-section');
+            if (section === 'logout') {
+                logout();
+            } else {
+                showSection(section);
+            }
+        };
+    });
 
     // Initialize on load
     initProfile();
