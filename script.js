@@ -45,7 +45,7 @@ const sampleProducts = [
         stock: 50,
         sizes: [],
         colors: ["Gold", "Silver", "Black"],
-        tag: "new",
+        tag: "sale",
         rating: 4
     },
     {
@@ -117,6 +117,34 @@ const sampleProducts = [
         colors: ["Red", "Blue", "Pink"],
         tag: "new",
         rating: 5
+    },
+    {
+        _id: "9",
+        name: "Wool Blazer",
+        description: "Premium wool blend blazer for formal occasions",
+        price: 349.99,
+        originalPrice: 449.99,
+        category: "men",
+        image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400",
+        stock: 18,
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        colors: ["Navy", "Charcoal", "Black"],
+        tag: "new",
+        rating: 5
+    },
+    {
+        _id: "10",
+        name: "Pearl Earrings",
+        description: "Elegant freshwater pearl earrings",
+        price: 89.99,
+        originalPrice: 119.99,
+        category: "accessories",
+        image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400",
+        stock: 60,
+        sizes: [],
+        colors: ["White", "Pink", "Black"],
+        tag: "new",
+        rating: 4
     }
 ];
 
