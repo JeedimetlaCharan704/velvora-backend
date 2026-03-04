@@ -56,19 +56,19 @@
         </div>
         
         <ul class="profile-menu" id="profileMenu">
-            <li class="active" data-section="dashboard">
+            <li class="active" id="menu-dashboard">
                 <i class="fas fa-th-large"></i> Dashboard
             </li>
-            <li data-section="orders">
+            <li id="menu-orders">
                 <i class="fas fa-box"></i> My Orders
             </li>
-            <li data-section="addresses">
+            <li id="menu-addresses">
                 <i class="fas fa-map-marker-alt"></i> Addresses
             </li>
-            <li data-section="account">
+            <li id="menu-account">
                 <i class="fas fa-cog"></i> Account Settings
             </li>
-            <li class="logout" data-section="logout">
+            <li class="logout" id="menu-logout">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </li>
         </ul>
@@ -392,22 +392,15 @@
         document.querySelectorAll('.profile-menu li').forEach(l => l.classList.remove('active'));
         
         document.getElementById(section).classList.add('active');
+        document.getElementById('menu-' + section).classList.add('active');
     }
 
-    // Add click listeners
-    document.querySelectorAll('.profile-menu li').forEach(function(li) {
-        li.style.cursor = 'pointer';
-        li.onclick = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var section = li.getAttribute('data-section');
-            if (section === 'logout') {
-                logout();
-            } else {
-                showSection(section);
-            }
-        };
-    });
+    // Menu click handlers
+    document.getElementById('menu-dashboard').onclick = function() { showSection('dashboard'); };
+    document.getElementById('menu-orders').onclick = function() { showSection('orders'); };
+    document.getElementById('menu-addresses').onclick = function() { showSection('addresses'); };
+    document.getElementById('menu-account').onclick = function() { showSection('account'); };
+    document.getElementById('menu-logout').onclick = function() { logout(); };
 
     // Initialize on load
     initProfile();
