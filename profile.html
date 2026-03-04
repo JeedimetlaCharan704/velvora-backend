@@ -56,19 +56,19 @@
         </div>
         
         <ul class="profile-menu">
-            <li class="active" id="menu-dashboard" style="cursor:pointer" onclick="clickMenu('dashboard')">
+            <li class="active" id="menu-dashboard" style="cursor:pointer">
                 <i class="fas fa-th-large"></i> Dashboard
             </li>
-            <li id="menu-orders" style="cursor:pointer" onclick="clickMenu('orders')">
+            <li id="menu-orders" style="cursor:pointer">
                 <i class="fas fa-box"></i> My Orders
             </li>
-            <li id="menu-addresses" style="cursor:pointer" onclick="clickMenu('addresses')">
+            <li id="menu-addresses" style="cursor:pointer">
                 <i class="fas fa-map-marker-alt"></i> Addresses
             </li>
-            <li id="menu-account" style="cursor:pointer" onclick="clickMenu('account')">
+            <li id="menu-account" style="cursor:pointer">
                 <i class="fas fa-cog"></i> Account Settings
             </li>
-            <li class="logout" id="menu-logout" style="cursor:pointer" onclick="doLogout()">
+            <li class="logout" id="menu-logout" style="cursor:pointer">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </li>
         </ul>
@@ -400,6 +400,13 @@
     function clickMenu(section) {
         showSection(section);
     }
+
+    // Add click handlers 
+    document.getElementById('menu-dashboard').onclick = function() { showSection('dashboard'); };
+    document.getElementById('menu-orders').onclick = function() { showSection('orders'); };
+    document.getElementById('menu-addresses').onclick = function() { showSection('addresses'); };
+    document.getElementById('menu-account').onclick = function() { showSection('account'); };
+    document.getElementById('menu-logout').onclick = function() { logout(); };
 
     function showNotification(message) {
         const notif = document.createElement('div');
