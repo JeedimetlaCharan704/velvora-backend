@@ -368,6 +368,30 @@
     color: #721c24;
 }
 
+.tag-badge{
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.tag-new{
+    background: #c8a96a;
+    color: white;
+}
+
+.tag-sale{
+    background: #dc3545;
+    color: white;
+}
+
+.tag-hot{
+    background: #fd7e14;
+    color: white;
+}
+
 .customers-grid{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
