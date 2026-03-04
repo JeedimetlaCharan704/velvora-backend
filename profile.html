@@ -215,7 +215,6 @@
     </div>
 </div>
 
-<script src="script.js"></script>
 <script>
     const API_URL = 'https://velvora-backend.onrender.com/api';
     let user = JSON.parse(localStorage.getItem('velvoraUser'));
@@ -397,6 +396,15 @@
 
     function clickMenu(section) {
         showSection(section);
+    }
+
+    function showNotification(message) {
+        const notif = document.createElement('div');
+        notif.className = 'notification show';
+        notif.textContent = message;
+        notif.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#333;color:white;padding:15px 30px;border-radius:10px;z-index:9999;';
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 3000);
     }
 
     // Initialize on load
