@@ -156,6 +156,28 @@ app.post('/api/auth/register', async (req, res) => {
   res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
 });
 
+// Setup endpoint to create admin if not exists
+app.post('/api/auth/setup', async (req, res) => {
+  try {
+    const existingAdmin = await User.findOne({ email: 'admin@velvora.com', role: 'admin' });
+    if (existingAdmin) {
+      return res.json({ message: 'Admin already exists' });
+    }
+    
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    const admin = new User({
+      name: 'Admin',
+      email: 'admin@velvora.com',
+      password: hashedPassword,
+      role: 'admin'
+    });
+    await admin.save();
+    res.json({ message: 'Admin created successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 app.post('/api/auth/user/login', async (req, res) => {
   const { email, password } = req.body;
   
