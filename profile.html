@@ -14,7 +14,7 @@
 
 <body>
 
-<div class="menu-overlay" onclick="toggleMenu()"></div>
+<div class="menu-overlay" onclick="toggleMenu()" style="display: none;"></div>
 
 <header class="header">
     <div class="logo" onclick="window.location.href='index.html'">VELVORA</div>
@@ -55,20 +55,20 @@
             <p id="userEmail">user@email.com</p>
         </div>
         
-        <ul class="profile-menu">
-            <li class="active" onclick="showSection('dashboard')">
+        <ul class="profile-menu" style="position: relative; z-index: 100;">
+            <li class="active" onclick="event.stopPropagation(); showSection('dashboard')">
                 <i class="fas fa-th-large"></i> Dashboard
             </li>
-            <li onclick="showSection('orders')">
+            <li onclick="event.stopPropagation(); showSection('orders')">
                 <i class="fas fa-box"></i> My Orders
             </li>
-            <li onclick="showSection('addresses')">
+            <li onclick="event.stopPropagation(); showSection('addresses')">
                 <i class="fas fa-map-marker-alt"></i> Addresses
             </li>
-            <li onclick="showSection('account')">
+            <li onclick="event.stopPropagation(); showSection('account')">
                 <i class="fas fa-cog"></i> Account Settings
             </li>
-            <li class="logout" onclick="logout()">
+            <li class="logout" onclick="event.stopPropagation(); logout()">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </li>
         </ul>
