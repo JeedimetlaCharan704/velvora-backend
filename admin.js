@@ -192,12 +192,40 @@ async function apiCall(endpoint, options = {}) {
 async function initAdmin() {
     const user = JSON.parse(localStorage.getItem('velvoraAdminUser'));
     
-    // Demo mode - allow access if no API
+    // Check if user is logged in with valid admin token
     if (!authToken || !user || user.role !== 'admin') {
-        // Try demo login
-        localStorage.setItem('velvoraAdminUser', JSON.stringify({ name: 'Admin', email: 'admin@velvora.com', role: 'admin' }));
-        localStorage.setItem('velvoraAdminToken', 'demo-token');
-        authToken = 'demo-token';
+        // Try to setup and auto-login with default admin credentials
+        try {
+            // First try to create admin if not exists
+            await fetch(`${API_URL}/auth/setup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            // Then try to login
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: 'admin@velvora.com', password: 'admin123' })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('velvoraAdminUser', JSON.stringify(data.user));
+                localStorage.setItem('velvoraAdminToken', data.token);
+                authToken = data.token;
+            } else {
+                // Fallback to demo mode
+                localStorage.setItem('velvoraAdminUser', JSON.stringify({ name: 'Admin', email: 'admin@velvora.com', role: 'admin' }));
+                localStorage.setItem('velvoraAdminToken', 'demo-token');
+                authToken = 'demo-token';
+            }
+        } catch (e) {
+            // API not available, use demo mode
+            localStorage.setItem('velvoraAdminUser', JSON.stringify({ name: 'Admin', email: 'admin@velvora.com', role: 'admin' }));
+            localStorage.setItem('velvoraAdminToken', 'demo-token');
+            authToken = 'demo-token';
+        }
     }
 
     await Promise.all([
