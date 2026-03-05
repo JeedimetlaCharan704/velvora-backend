@@ -2,52 +2,43 @@
 // Change this to your production URL when deploying
 const API_URL = 'https://velvora-backend.onrender.com/api';
 let authToken = localStorage.getItem('velvoraAdminToken');
-let allProducts = getStoredProducts();
+let allProducts = [];
 let allOrders = [];
 let cropper = null;
 let currentImageCallback = null;
 
-const sampleProducts = [
-    {
-        _id: "1",
-        name: "Silk Evening Gown",
-        description: "Elegant silk evening gown perfect for special occasions",
-        price: 299.99,
-        originalPrice: 399.99,
-        category: "women",
-        image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400",
-        stock: 15,
-        sizes: ["XS", "S", "M", "L", "XL"],
-        colors: ["Black", "Navy", "Burgundy"],
-        tag: "new",
-        rating: 5
-    },
-    {
-        _id: "2",
-        name: "Premium Leather Jacket",
-        description: "Genuine leather jacket with modern fit",
-        price: 449.99,
-        originalPrice: 549.99,
-        category: "men",
-        image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400",
-        stock: 20,
-        sizes: ["S", "M", "L", "XL", "XXL"],
-        colors: ["Black", "Brown"],
-        tag: "new",
-        rating: 5
-    },
-    {
-        _id: "3",
-        name: "Designer Sunglasses",
-        description: "Luxury designer sunglasses with UV protection",
-        price: 189.99,
-        originalPrice: 249.99,
-        category: "accessories",
-        image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400",
-        stock: 50,
-        sizes: [],
-        colors: ["Gold", "Silver", "Black"],
-        tag: "new",
+// Helper function for API calls
+async function apiCall(endpoint, options = {}) {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        ...(authToken && { Authorization: `Bearer ${authToken}` }),
+        ...options.headers
+    };
+
+    try {
+        const response = await fetch(`${API_URL}${endpoint}?t=${Date.now()}`, {
+            ...options,
+            headers
+        });
+
+        if (response.status === 401) {
+            logoutAdmin();
+            throw new Error('Session expired');
+        }
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong');
+        }
+        return data;
+    } catch (e) {
+        console.error('API Error:', e.message);
+        throw e;
+    }
+}
         rating: 4
     },
     {
@@ -195,6 +186,13 @@ async function apiCall(endpoint, options = {}) {
 
 // Initialize Admin
 async function initAdmin() {
+    // Clear any old demo token and force fresh login
+    if (authToken === 'demo-token') {
+        localStorage.removeItem('velvoraAdminToken');
+        localStorage.removeItem('velvoraAdminUser');
+        authToken = null;
+    }
+    
     const user = JSON.parse(localStorage.getItem('velvoraAdminUser'));
     
     // Check if user is logged in with valid admin token
@@ -220,16 +218,11 @@ async function initAdmin() {
                 localStorage.setItem('velvoraAdminToken', data.token);
                 authToken = data.token;
             } else {
-                // Fallback to demo mode
-                localStorage.setItem('velvoraAdminUser', JSON.stringify({ name: 'Admin', email: 'admin@velvora.com', role: 'admin' }));
-                localStorage.setItem('velvoraAdminToken', 'demo-token');
-                authToken = 'demo-token';
+                alert('Please login to admin panel');
+                window.location.href = 'login.html';
             }
         } catch (e) {
-            // API not available, use demo mode
-            localStorage.setItem('velvoraAdminUser', JSON.stringify({ name: 'Admin', email: 'admin@velvora.com', role: 'admin' }));
-            localStorage.setItem('velvoraAdminToken', 'demo-token');
-            authToken = 'demo-token';
+            alert('Unable to connect to server. Please refresh and try again.');
         }
     }
 
@@ -249,10 +242,9 @@ async function loadProducts() {
         document.getElementById('totalProducts').textContent = data.length;
     } catch (error) {
         console.error('Error loading products:', error);
-        console.log('Using sample products as fallback');
-        allProducts = getStoredProducts();
-        renderProducts();
-        document.getElementById('totalProducts').textContent = allProducts.length;
+        alert('Failed to load products. Please refresh the page.');
+    }
+}
     }
 }
 
