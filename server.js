@@ -232,22 +232,16 @@ app.get('/api/products/category/:category', async (req, res) => {
 });
 
 const seedProducts = [
-  { name: "Premium Oxford Shirt", price: 129.99, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&h=600&fit=crop&q=80", category: "men", tag: "new", rating: 5, sizes: ["S", "M", "L", "XL", "XXL"], stock: 50 },
-  { name: "Evening Gown", price: 289.99, image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&h=600&fit=crop&q=80", category: "women", tag: "new", rating: 5, sizes: ["S", "M", "L", "XL"], stock: 30 },
-  { name: "Designer Jacket", price: 199.99, image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=600&fit=crop&q=80", category: "men", tag: "sale", originalPrice: 299.99, rating: 4, sizes: ["S", "M", "L", "XL", "XXL"], stock: 25 },
-  { name: "Luxury Sneakers", price: 349.99, image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&h=600&fit=crop&q=80", category: "shoes", tag: "new", rating: 5, sizes: ["6", "7", "8", "9", "10", "11"], stock: 40 },
-  { name: "Silk Blouse", price: 89.99, image: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&h=600&fit=crop&q=80", category: "women", tag: "new", rating: 4, sizes: ["S", "M", "L", "XL"], stock: 45 },
-  { name: "Cashmere Sweater", price: 179.99, image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=600&fit=crop&q=80", category: "women", tag: "sale", originalPrice: 249.99, rating: 5, sizes: ["S", "M", "L", "XL"], stock: 35 },
-  { name: "Tuxedo Trousers", price: 149.99, image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&h=600&fit=crop&q=80", category: "men", tag: "new", rating: 4, sizes: ["S", "M", "L", "XL", "XXL"], stock: 28 },
-  { name: "Leather Boots", price: 249.99, image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=600&h=600&fit=crop&q=80", category: "shoes", tag: "sale", originalPrice: 349.99, rating: 5, sizes: ["6", "7", "8", "9", "10", "11"], stock: 20 },
-  { name: "Tuxedo Blazer", price: 399.99, image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&h=600&fit=crop&q=80", category: "men", tag: "new", rating: 5, sizes: ["S", "M", "L", "XL", "XXL"], stock: 15 },
-  { name: "Silk Scarf", price: 79.99, image: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=600&h=600&fit=crop&q=80", category: "accessories", tag: "new", rating: 4, sizes: [], stock: 60 },
-  { name: "Leather Belt", price: 89.99, image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=600&h=600&fit=crop&q=80", category: "accessories", tag: "new", rating: 5, sizes: [], stock: 55 },
-  { name: "Luxury Watch", price: 599.99, image: "https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=600&h=600&fit=crop&q=80", category: "accessories", tag: "new", rating: 5, sizes: [], stock: 12 },
-  { name: "Kids Denim Set", price: 59.99, image: "https://images.unsplash.com/photo-1519235106638-35e35556b40d?w=600&h=600&fit=crop&q=80", category: "kids", tag: "new", rating: 4, sizes: ["S", "M", "L", "XL"], stock: 40 },
-  { name: "Summer Dress", price: 129.99, image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600&h=600&fit=crop&q=80", category: "women", tag: "sale", originalPrice: 179.99, rating: 5, sizes: ["S", "M", "L", "XL"], stock: 32 },
-  { name: "Classic Polo", price: 69.99, image: "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=600&h=600&fit=crop&q=80", category: "men", tag: "new", rating: 4, sizes: ["S", "M", "L", "XL", "XXL"], stock: 50 },
-  { name: "Aviator Sunglasses", price: 159.99, image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop&q=80", category: "accessories", tag: "sale", originalPrice: 199.99, rating: 5, sizes: [], stock: 45 }
+  { name: "Silk Evening Gown", price: 299.99, originalPrice: 399.99, image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=600&fit=crop&q=80", category: "women", tag: "new", rating: 5, sizes: ["S", "M", "L", "XL"], stock: 20 },
+  { name: "Premium Leather Jacket", price: 449.99, originalPrice: 549.99, image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=600&fit=crop&q=80", category: "men", tag: "new", rating: 5, sizes: ["S", "M", "L", "XL", "XXL"], stock: 15 },
+  { name: "Designer Sunglasses", price: 189.99, originalPrice: 249.99, image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop&q=80", category: "accessories", tag: "sale", rating: 4, sizes: [], stock: 50 },
+  { name: "Cashmere Sweater", price: 199.99, originalPrice: 279.99, image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=600&fit=crop&q=80", category: "women", tag: "sale", rating: 5, sizes: ["S", "M", "L", "XL"], stock: 30 },
+  { name: "Classic Denim Jeans", price: 89.99, originalPrice: 129.99, image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=600&fit=crop&q=80", category: "men", tag: "new", rating: 4, sizes: ["28", "30", "32", "34", "36"], stock: 45 },
+  { name: "Floral Summer Dress", price: 79.99, originalPrice: 99.99, image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600&h=600&fit=crop&q=80", category: "women", tag: "sale", rating: 4, sizes: ["S", "M", "L", "XL"], stock: 35 },
+  { name: "Leather Belt", price: 49.99, originalPrice: 69.99, image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=600&h=600&fit=crop&q=80", category: "accessories", tag: "sale", rating: 4, sizes: [], stock: 60 },
+  { name: "Kids Party Wear", price: 59.99, originalPrice: 79.99, image: "https://images.unsplash.com/photo-1519235106638-35e35556b40d?w=600&h=600&fit=crop&q=80", category: "kids", tag: "new", rating: 5, sizes: ["S", "M", "L", "XL"], stock: 25 },
+  { name: "Wool Blazer", price: 349.99, originalPrice: 449.99, image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&h=600&fit=crop&q=80", category: "men", tag: "new", rating: 5, sizes: ["S", "M", "L", "XL", "XXL"], stock: 18 },
+  { name: "Pearl Earrings", price: 89.99, originalPrice: 119.99, image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&h=600&fit=crop&q=80", category: "accessories", tag: "new", rating: 4, sizes: [], stock: 40 }
 ];
 
 app.post('/api/seed', async (req, res) => {
