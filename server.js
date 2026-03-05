@@ -260,5 +260,15 @@ app.post('/api/seed', async (req, res) => {
   }
 });
 
+app.get('/api/seed', async (req, res) => {
+  try {
+    await Product.deleteMany({});
+    await Product.insertMany(seedProducts);
+    res.json({ message: 'Products seeded successfully', count: seedProducts.length });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
