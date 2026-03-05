@@ -153,9 +153,14 @@ async function apiCall(endpoint, options = {}) {
     }
 
     try {
-        const response = await fetch(`${API_URL}${endpoint}`, {
+        const response = await fetch(`${API_URL}${endpoint}?t=${Date.now()}`, {
             ...options,
-            headers
+            headers: {
+                ...headers,
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
         });
 
         if (response.status === 401) {

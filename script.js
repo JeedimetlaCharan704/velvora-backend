@@ -149,10 +149,25 @@ const sampleProducts = [
 ];
 
 function loadProducts() {
-    products = sampleProducts;
-    console.log('Products loaded:', products.length);
-    renderProducts();
-    renderNewArrivals();
+    fetch(`${API_URL}/products?t=${Date.now()}`, {
+        headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        products = data;
+        renderProducts();
+        renderNewArrivals();
+    })
+    .catch(err => {
+        console.log('Using local products:', err);
+        products = sampleProducts;
+        renderProducts();
+        renderNewArrivals();
+    });
 }
 
 function init() {
