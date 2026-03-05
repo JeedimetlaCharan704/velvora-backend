@@ -350,26 +350,11 @@ function renderProducts() {
             <td>$${p.price.toFixed(2)}</td>
             <td><span class="stock-badge ${p.stock < 20 ? 'low' : ''}">${p.stock}</span></td>
             <td>
-                <button class="action-btn edit-btn" data-index="${index}"><i class="fas fa-edit"></i></button>
-                <button class="action-btn delete delete-btn" data-index="${index}"><i class="fas fa-trash"></i></button>
+                <button class="action-btn" onclick="editProduct(${index})"><i class="fas fa-edit"></i></button>
+                <button class="action-btn delete" onclick="deleteProduct(${index})"><i class="fas fa-trash"></i></button>
             </td>
         </tr>
     `).join('');
-    
-    // Add click handlers
-    const editBtns = tbody.querySelectorAll('.edit-btn');
-    const deleteBtns = tbody.querySelectorAll('.delete-btn');
-    
-    editBtns.forEach((btn) => {
-        btn.onclick = function() { 
-            editProduct(this.dataset.index); 
-        };
-    });
-    deleteBtns.forEach((btn) => {
-        btn.onclick = function() { 
-            deleteProduct(this.dataset.index); 
-        };
-    });
 }
     
     // Mobile cards
