@@ -345,8 +345,6 @@ function renderProducts() {
     const tbody = document.getElementById('productsTableBody');
     if (!tbody) return;
     
-    console.log('Rendering products:', allProducts.length);
-    
     // Desktop table
     tbody.innerHTML = allProducts.map((p, index) => `
         <tr>
@@ -364,17 +362,17 @@ function renderProducts() {
     `).join('');
     
     // Add click handlers
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.onclick = function() {
-            const idx = parseInt(this.dataset.index);
-            console.log('Edit clicked, index:', idx);
-            editProduct(idx);
+    const editBtns = tbody.querySelectorAll('.edit-btn');
+    const deleteBtns = tbody.querySelectorAll('.delete-btn');
+    
+    editBtns.forEach((btn) => {
+        btn.onclick = function() { 
+            editProduct(this.dataset.index); 
         };
     });
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.onclick = function() {
-            const idx = parseInt(this.dataset.index);
-            deleteProduct(idx);
+    deleteBtns.forEach((btn) => {
+        btn.onclick = function() { 
+            deleteProduct(this.dataset.index); 
         };
     });
 }
@@ -495,14 +493,12 @@ async function addProduct(event) {
 
 // Edit Product
 async function editProduct(index) {
-    console.log('editProduct called with index:', index);
     const product = allProducts[index];
     if (!product) {
         alert('Product not found');
         return;
     }
     
-    console.log('Editing product:', product.name);
     const productId = product._id;
 
     const formHtml = `
@@ -865,12 +861,29 @@ function closeImageModal() {
 
 // Initialize Charts
 let revenueChart = null;
+let revenueChart = null;
 let ordersChart = null;
 
 function initCharts() {
-    // Destroy existing charts
-    if (revenueChart) { revenueChart.destroy(); revenueChart = null; }
-    if (ordersChart) { ordersChart.destroy(); ordersChart = null; }
+    // Destroy existing charts first
+    const revenueCtx = document.getElementById('revenueChart');
+    const ordersCtx = document.getElementById('ordersStatusChart');
+    
+    if (revenueCtx) {
+        if (revenueChart) {
+            revenueChart.destroy();
+            revenueChart = null;
+        }
+        // Clear canvas
+        revenueCtx.getContext('2d').clearRect(0, 0, revenueCtx.width, revenueCtx.height);
+    }
+    if (ordersCtx) {
+        if (ordersChart) {
+            ordersChart.destroy();
+            ordersChart = null;
+        }
+        ordersCtx.getContext('2d').clearRect(0, 0, ordersCtx.width, ordersCtx.height);
+    }
     
     // Revenue Chart
     const revenueCtx = document.getElementById('revenueChart');
