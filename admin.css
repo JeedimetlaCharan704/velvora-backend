@@ -1430,16 +1430,23 @@
         overflow: visible;
         background: transparent;
         box-shadow: none;
+        display: block !important;
     }
     
     .products-table table {
-        display: none;
+        display: none !important;
     }
     
     .products-table .mobile-cards {
         display: flex !important;
         flex-direction: column;
         gap: 12px;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .products-table .mobile-cards .product-card-admin {
+        display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
     }
@@ -1811,7 +1818,20 @@
 /* Show mobile elements */
 @media (max-width: 768px) {
     .mobile-cards {
-        display: flex;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .mobile-cards .product-card-admin {
+        display: flex !important;
+        visibility: visible !important;
+    }
+    
+    .products-table .mobile-cards {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .fab {
