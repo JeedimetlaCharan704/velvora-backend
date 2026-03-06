@@ -16,6 +16,37 @@
 
 <div class="menu-overlay" onclick="toggleMenu()" style="display: none;"></div>
 
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h3>Shopping Bag</h3>
+        <span class="cart-close" onclick="toggleCart()">&times;</span>
+    </div>
+    <div class="cart-items" id="cartItems">
+        <p class="cart-empty">Your bag is empty</p>
+    </div>
+    <div class="cart-footer">
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotal">$0.00</span>
+        </div>
+        <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+    </div>
+</div>
+
+<div class="wishlist-sidebar" id="wishlistSidebar">
+    <div class="wishlist-header">
+        <h3>My Wishlist</h3>
+        <span class="wishlist-close" onclick="toggleWishlist()">&times;</span>
+    </div>
+    <div class="wishlist-items" id="wishlistItems">
+        <p class="wishlist-empty">Your wishlist is empty</p>
+    </div>
+</div>
+
+<div class="notification" id="notification">
+    <span id="notificationText"></span>
+</div>
+
 <header class="header">
     <div class="logo" onclick="window.location.href='index.html'">VELVORA</div>
 
@@ -30,16 +61,18 @@
         <a href="index.html#testimonials">About</a>
     </nav>
 
-    <div class="right-section">
+<div class="right-section">
         <div class="icons">
             <a href="profile.html" class="user-icon">
                 <i class="fas fa-user"></i>
             </a>
             <span class="wishlist-icon" onclick="toggleWishlist()">
                 <i class="far fa-heart"></i>
+                <small id="wishlistCount">0</small>
             </span>
             <span class="cart" onclick="toggleCart()">
                 <i class="fas fa-shopping-bag"></i>
+                <small id="cartCount">0</small>
             </span>
         </div>
     </div>
@@ -215,11 +248,13 @@
     </div>
 </div>
 
+<script src="script.js"></script>
 <script>
     const API_URL = 'https://velvora-backend.onrender.com/api';
     let user = JSON.parse(localStorage.getItem('velvoraUser'));
     let addresses = JSON.parse(localStorage.getItem('velvoraAddresses')) || [];
     let orders = JSON.parse(localStorage.getItem('velvoraOrders')) || [];
+    let cart = JSON.parse(localStorage.getItem('velvoraCart')) || [];
 
     if (!user) {
         user = { name: 'Guest User', email: 'guest@demo.com', phone: '' };
@@ -235,6 +270,8 @@
         document.getElementById('profileEmail').value = user.email;
         document.getElementById('profilePhone').value = user.phone || '';
         
+        updateCartCount();
+        updateWishlistCount();
         fetchOrdersAndRender();
     }
 
@@ -417,8 +454,16 @@
         setTimeout(() => notif.remove(), 3000);
     }
 
-    // Initialize on load
+// Initialize on load
     initProfile();
+
+    function goToCheckout() {
+        if (cart.length === 0) {
+            showNotification('Your bag is empty!');
+            return;
+        }
+        window.location.href = 'checkout.html';
+    }
 </script>
 
 </body>

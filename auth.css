@@ -254,6 +254,9 @@
     text-decoration: underline;
 }
 
+.notification{ position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px); background:linear-gradient(135deg, #2d2d2d, #1a1a1a); color:white; padding:16px 30px; border-radius:14px; box-shadow:0 10px 40px rgba(0,0,0,0.3); z-index:5000; opacity:0; transition:all 0.4s; }
+.notification.show{ transform:translateX(-50%) translateY(0); opacity:1; }
+
 .auth-info{
     background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
     padding: 50px;

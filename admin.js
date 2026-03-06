@@ -40,39 +40,6 @@ async function apiCall(endpoint, options = {}) {
     }
 }
 
-// Helper function for API calls
-async function apiCall(endpoint, options = {}) {
-    const headers = {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        ...(authToken && { Authorization: `Bearer ${authToken}` }),
-        ...options.headers
-    };
-
-    try {
-        const response = await fetch(`${API_URL}${endpoint}?t=${Date.now()}`, {
-            ...options,
-            headers
-        });
-
-        if (response.status === 401) {
-            logoutAdmin();
-            throw new Error('Session expired');
-        }
-
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong');
-        }
-        return data;
-    } catch (e) {
-        console.error('API Error:', e.message);
-        throw e;
-    }
-}
-
 // Initialize Admin
 async function initAdmin() {
     console.log('Initializing admin...');

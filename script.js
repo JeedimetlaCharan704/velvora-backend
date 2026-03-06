@@ -325,14 +325,14 @@ function addToCartFromModal(productId) {
 }
 
 function removeFromCart(productId) {
-    cart = cart.filter(item => (item._id || item.id) != productId);
+    cart = cart.filter(item => String(item._id || item.id) !== String(productId));
     saveCart();
     updateCartCount();
     renderCartItems();
 }
 
 function updateQuantity(productId, change) {
-    const item = cart.find(item => (item._id || item.id) == productId);
+    const item = cart.find(item => String(item._id || item.id) === String(productId));
     if (item) {
         item.quantity += change;
         if (item.quantity <= 0) {
@@ -368,19 +368,19 @@ function renderCartItems() {
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     totalEl.textContent = `$${total.toFixed(2)}`;
 
-    container.innerHTML = cart.map(item => `
+container.innerHTML = cart.map(item => `
         <div class="cart-item">
             <img src="${item.image}" alt="${item.name}">
             <div class="cart-item-info">
                 <h4>${item.name}</h4>
                 <p class="cart-item-price">$${item.price.toFixed(2)}</p>
                 <div class="quantity-controls">
-                    <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                    <button onclick="updateQuantity('${item._id || item.id}', -1)">-</button>
                     <span>${item.quantity}</span>
-                    <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                    <button onclick="updateQuantity('${item._id || item.id}', 1)">+</button>
                 </div>
             </div>
-            <span class="cart-item-remove" onclick="removeFromCart(${item.id})">
+            <span class="cart-item-remove" onclick="removeFromCart('${item._id || item.id}')">
                 <i class="fas fa-times"></i>
             </span>
         </div>
@@ -590,8 +590,8 @@ function searchProducts(term) {
     if (results.length === 0) {
         resultsContainer.innerHTML = '<p class="no-results">No products found</p>';
     } else {
-        resultsContainer.innerHTML = results.map(p => `
-            <div class="search-result-item" onclick="openProductModal(${p.id})">
+resultsContainer.innerHTML = results.map(p => `
+            <div class="search-result-item" onclick="openProductModal('${p._id || p.id}')">
                 <img src="${p.image}" alt="${p.name}">
                 <div>
                     <h4>${p.name}</h4>
