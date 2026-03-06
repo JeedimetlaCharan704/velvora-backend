@@ -374,6 +374,11 @@ function renderProducts() {
         if (!mobileCards) {
             mobileCards = document.createElement('div');
             mobileCards.className = 'mobile-cards';
+            mobileCards.style.display = 'flex';
+            mobileCards.style.flexDirection = 'column';
+            mobileCards.style.gap = '12px';
+            mobileCards.style.visibility = 'visible';
+            mobileCards.style.opacity = '1';
             container.appendChild(mobileCards);
         }
         

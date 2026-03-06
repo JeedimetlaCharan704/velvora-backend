@@ -1428,6 +1428,8 @@
     /* Products as Cards */
     .products-table {
         overflow: visible;
+        background: transparent;
+        box-shadow: none;
     }
     
     .products-table table {
@@ -1435,9 +1437,11 @@
     }
     
     .products-table .mobile-cards {
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         gap: 12px;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .product-card-admin {
@@ -1448,6 +1452,7 @@
         gap: 12px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         border: none;
+        visibility: visible !important;
     }
     
     .product-card-admin img {
