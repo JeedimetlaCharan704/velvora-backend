@@ -1,6 +1,6 @@
 // API Configuration
 // Change this to your production URL when deploying
-const API_URL = 'https://velvora-backend.onrender.com/api';
+const API_URL = localStorage.getItem('apiUrl') || 'http://localhost:5000/api';
 let authToken = localStorage.getItem('velvoraAdminToken');
 let allProducts = [];
 let allOrders = [];
@@ -19,7 +19,10 @@ async function apiCall(endpoint, options = {}) {
     };
 
     try {
-        const response = await fetch(`${API_URL}${endpoint}?t=${Date.now()}`, {
+        const url = `${API_URL}${endpoint}?t=${Date.now()}`;
+        console.log('API Call:', options.method || 'GET', url);
+        
+        const response = await fetch(url, {
             ...options,
             headers
         });
@@ -29,42 +32,16 @@ async function apiCall(endpoint, options = {}) {
             throw new Error('Session expired');
         }
 
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong');
+        const text = await response.text();
+        console.log('API Response:', response.status, text.substring(0, 200));
+        
+        if (!text.trim()) {
+            return { success: true };
         }
-        return data;
-    } catch (e) {
-        console.error('API Error:', e.message);
-        throw e;
-    }
-}
-
-// Helper function for API calls
-async function apiCall(endpoint, options = {}) {
-    const headers = {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        ...(authToken && { Authorization: `Bearer ${authToken}` }),
-        ...options.headers
-    };
-
-    try {
-        const response = await fetch(`${API_URL}${endpoint}?t=${Date.now()}`, {
-            ...options,
-            headers
-        });
-
-        if (response.status === 401) {
-            logoutAdmin();
-            throw new Error('Session expired');
-        }
-
-        const data = await response.json();
+        
+        const data = JSON.parse(text);
         if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong');
+            throw new Error(data.message || `Request failed with status ${response.status}`);
         }
         return data;
     } catch (e) {
@@ -75,6 +52,8 @@ async function apiCall(endpoint, options = {}) {
 
 // Initialize Admin
 async function initAdmin() {
+    console.log('Initializing Admin with API URL:', API_URL);
+    
     // Clear any old demo token and force fresh login
     if (authToken === 'demo-token') {
         localStorage.removeItem('velvoraAdminToken');
@@ -111,15 +90,25 @@ async function initAdmin() {
                 window.location.href = 'login.html';
             }
         } catch (e) {
-            alert('Unable to connect to server. Please refresh and try again.');
+            console.error('Connection error:', e);
+            const apiUrl = prompt('Unable to connect to server. Please enter your backend API URL:', API_URL);
+            if (apiUrl) {
+                localStorage.setItem('apiUrl', apiUrl);
+                location.reload();
+            }
+            return;
         }
     }
 
-    await Promise.all([
-        loadProducts(),
-        loadOrders(),
-        loadStats()
-    ]);
+    try {
+        await Promise.all([
+            loadProducts(),
+            loadOrders(),
+            loadStats()
+        ]);
+    } catch (e) {
+        console.error('Error loading data:', e);
+    }
     
     // Initialize charts after data is loaded
     if (typeof initCharts === 'function') {
@@ -614,15 +603,18 @@ async function viewOrder(orderId) {
 
 // Update Order Status
 async function updateOrderStatus(orderId, status) {
+    console.log('Updating order:', orderId, 'to status:', status);
     try {
-        await apiCall(`/orders/${orderId}/status`, {
+        const result = await apiCall(`/orders/${orderId}/status`, {
             method: 'PUT',
             body: JSON.stringify({ status })
         });
         
+        console.log('Update result:', result);
         await loadOrders();
-        alert('Order status updated!');
+        alert('Order status updated to ' + status + '!');
     } catch (error) {
+        console.error('Error updating order:', error);
         alert('Error updating order: ' + error.message);
     }
 }
