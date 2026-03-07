@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000/api' 
+    : 'https://velvora-backend.vercel.app/api';
 let products = [];
 let cart = JSON.parse(localStorage.getItem('velvoraCart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('velvoraWishlist')) || [];

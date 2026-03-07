@@ -1,6 +1,8 @@
 // API Configuration
-// Change this to your production URL when deploying
-const API_URL = 'http://localhost:5000/api';
+// Auto-detect API URL based on current domain
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000/api' 
+    : 'https://velvora-backend.vercel.app/api';
 let authToken = localStorage.getItem('velvoraAdminToken');
 let allProducts = [];
 let allOrders = [];

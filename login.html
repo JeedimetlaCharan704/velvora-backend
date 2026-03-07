@@ -100,7 +100,9 @@
 </div>
 
 <script>
-    const API_URL = 'http://localhost:5000/api';
+    const API_URL = window.location.hostname === 'localhost' 
+        ? 'http://localhost:5000/api' 
+        : 'https://velvora-backend.vercel.app/api';
 
     function switchTab(tab) {
         document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
