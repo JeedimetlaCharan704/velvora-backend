@@ -1,4 +1,4 @@
-const API_URL = localStorage.getItem('apiUrl') || 'https://velvora-backend.onrender.com/api';
+const API_URL = localStorage.getItem('apiUrl') || 'https://velvora-site.onrender.com/api';
 let products = [];
 let cart = JSON.parse(localStorage.getItem('velvoraCart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('velvoraWishlist')) || [];
