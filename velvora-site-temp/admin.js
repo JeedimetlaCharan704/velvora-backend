@@ -655,24 +655,48 @@ async function viewOrder(orderId) {
 async function updateOrderStatus(orderId, status) {
     console.log('Updating order:', orderId, 'to status:', status);
     console.log('Using API URL:', API_URL);
+    console.log('Auth Token:', authToken ? 'Present' : 'Missing');
     
-    if (!orderId || orderId === 'undefined') {
+    if (!orderId || orderId === 'undefined' || orderId === 'null') {
         alert('Error: Order ID is missing. Please refresh the page and try again.');
         return;
     }
     
+    if (!authToken) {
+        alert('Error: Admin not logged in. Please refresh the page.');
+        return;
+    }
+    
     try {
-        const result = await apiCall(`/orders/${orderId}/status`, {
+        // Direct fetch call to see full response
+        const response = await fetch(`${API_URL}/orders/${orderId}/status?t=${Date.now()}`, {
             method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
             body: JSON.stringify({ status })
         });
         
+        console.log('Response status:', response.status);
+        const text = await response.text();
+        console.log('Response text:', text.substring(0, 500));
+        
+        if (!response.ok) {
+            if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+                throw new Error('API returned error page. Backend may not be updated or URL is wrong.');
+            }
+            const data = JSON.parse(text);
+            throw new Error(data.message || 'Request failed');
+        }
+        
+        const result = JSON.parse(text);
         console.log('Update result:', result);
         await loadOrders();
         alert('Order status updated to ' + status + '!');
     } catch (error) {
         console.error('Error updating order:', error);
-        alert('Error updating order: ' + error.message + '\n\nCurrent API: ' + API_URL);
+        alert('Error: ' + error.message + '\n\nAPI: ' + API_URL + '\n\nToken: ' + (authToken ? 'OK' : 'Missing'));
     }
 }
 
