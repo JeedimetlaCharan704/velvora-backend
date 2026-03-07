@@ -14,6 +14,21 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Root route - API info
+app.get('/', (req, res) => {
+  res.json({ 
+    name: 'Velvora API', 
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/api/health',
+      products: '/api/products',
+      orders: '/api/orders',
+      auth: '/api/auth'
+    }
+  });
+});
+
 app.get('/api/health', (req, res) => {
   const mongoState = mongoose.connection.readyState;
   const mongoStates = {
