@@ -6,7 +6,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ['https://velvora-site.vercel.app', 'http://localhost:5000'],
+  credentials: true
+}));
 app.use(express.json());
 
 app.get('/api/health', (req, res) => {
